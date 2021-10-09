@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "lib": [
+            "esnext"
+        ],
+        "strict": true,
+        "allowUnreachableCode": false,
+        "allowJs": true,
+        "checkJs": false,
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "declaration": true,
+        "sourceMap": true,
+        "baseUrl": ".",
+        "outDir": "build",
+        "paths": {
+            "@App/*": [
+                "src/*"
+            ],
+            "lib/*": [
+                "common/*"
+            ]
+        }
+    },
+    "include": [
+        "src/**/*"
+    ]
+}

@@ -1,0 +1,7 @@
+{
+	"name": "superb-package",
+	"np": {
+		"yarn": false,
+		"contents": "build"
+	}
+}
