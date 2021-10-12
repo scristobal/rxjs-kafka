@@ -3,12 +3,12 @@
   "version": "0.0.1-1",
   "description": "A no fuss rxjs wrapper for kafkajs, focused on ease of use.",
   "main": "build/index.js",
-   "type": "module",
+  "type": "module",
   "scripts": {
     "test": "jest",
     "watcher": "jest --watch",
     "build": "tsc",
-    "start": "tsc && node . ",
+    "start": "node . ",
     "lint": "eslint src --ext 'ts,tsx,json'",
     "dev": "tsc-watch --onSuccess 'node .' "
   },
@@ -27,7 +27,7 @@
   "bugs": {
     "url": "https://github.com/scristobal/rxkfk/issues"
   },
-  "homepage": "https://github.com/scristobal/rxkfk#readme", 
+  "homepage": "https://github.com/scristobal/rxkfk#readme",
   "devDependencies": {
     "@types/jest": "^27.0.2",
     "@types/node": "^16.10.2",
@@ -42,5 +42,9 @@
     "ts-jest": "^27.0.5",
     "tsc-watch": "^4.5.0",
     "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "kafkajs": "^1.15.0",
+    "rxjs": "^7.4.0"
   }
 }
