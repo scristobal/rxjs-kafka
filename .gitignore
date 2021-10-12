@@ -103,7 +103,6 @@ dist
 # TernJS port file
 .tern-port
 
-# transpiled ooutput
+# transpiled output
 build/
 
-*/tryout*

@@ -76,7 +76,7 @@ const rxkfk = function (
     const pushMessage$$ = new Subject<JSON | undefined>();
 
     const pushMessage = function () {
-        const producer = kafka.producer(producerOptions); //as Producer & { connected: boolean };
+        const producer = kafka.producer(producerOptions);
         let connected = false;
 
         const topicExp = topic.topic;
@@ -84,7 +84,7 @@ const rxkfk = function (
         assertTopicString(topicExp);
 
         return {
-            next: async (message) => {
+            next: async (message: JSON | undefined) => {
                 const record: ProducerRecord = {
                     topic: topicExp,
                     messages: [{ value: JSON.stringify(message) }]
@@ -101,13 +101,13 @@ const rxkfk = function (
 
                 await asyncPush(record);
             },
-            error: (error) => console.error(error),
+            error: (error: unknown) => console.error(error),
 
             complete: async () => {
                 await producer.disconnect();
                 connected = false;
             }
-        } as Observer<JSON | undefined>;
+        };
     }.call(undefined);
 
     pushMessage$$.pipe(observeOn(asyncScheduler)).subscribe(pushMessage);
