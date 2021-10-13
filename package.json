@@ -7,10 +7,11 @@
   "scripts": {
     "test": "jest",
     "watcher": "jest --watch",
-    "build": "tsc",
+    "build": "rm -rf dist && tsc -p .",
     "start": "node . ",
     "lint": "eslint src --ext 'ts,tsx,json'",
-    "dev": "tsc-watch --onSuccess 'node .' "
+    "dev": "tsc-watch --onSuccess 'node .' ", 
+    "release": "np"
   },
   "repository": {
     "type": "git",

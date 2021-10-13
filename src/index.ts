@@ -50,10 +50,16 @@ const rxkfk = function (
             });
         };
 
-        processBatchWith();
+        processBatchWith().catch(() => {
+            throw new Error('There was a problem setting up the consumer');
+        });
 
         return async () => {
-            await consumer.disconnect();
+            try {
+                await consumer.disconnect();
+            } catch {
+                throw new Error('Consumer could not be disconnected');
+            }
         };
     });
 
@@ -99,13 +105,21 @@ const rxkfk = function (
                     await producer.send(record);
                 };
 
-                await asyncPush(record);
+                try {
+                    await asyncPush(record);
+                } catch {
+                    throw new Error('There was a problem pushing to the topic');
+                }
             },
             error: (error: unknown) => console.error(error),
 
             complete: async () => {
-                await producer.disconnect();
-                connected = false;
+                try {
+                    await producer.disconnect();
+                    connected = false;
+                } catch {
+                    throw new Error('Producer could not get disconnected');
+                }
             }
         };
     }.call(undefined);

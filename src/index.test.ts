@@ -27,17 +27,21 @@ describe('Consumers', () => {
 
         const admin = kafka.admin();
 
-        await admin.connect();
+        try {
+            await admin.connect();
 
-        const currentOffsets = await admin.fetchTopicOffsetsByTimestamp(topic.topic, Date.now());
+            const currentOffsets = await admin.fetchTopicOffsetsByTimestamp(topic.topic, Date.now());
 
-        await admin.setOffsets({
-            groupId,
-            topic: topic.topic,
-            partitions: currentOffsets
-        });
+            await admin.setOffsets({
+                groupId,
+                topic: topic.topic,
+                partitions: currentOffsets
+            });
 
-        await admin.disconnect();
+            await admin.disconnect();
+        } catch (error) {
+            throw new Error('There was a problem setting offsets to latest');
+        }
 
         const { message$$, pushMessage$$ } = fromKafkaTopic(cfg, topic, { groupId });
 
@@ -49,8 +53,16 @@ describe('Consumers', () => {
 
         interval(1000).pipe(take(6)).subscribe(pushMessage$$);
 
-        await lastValueFrom(pushMessage$$);
+        await lastValueFrom(pushMessage$$).catch(() => {
+            throw new Error('There was a problem finalizing the consumer');
+        });
 
         expect(mockObserver.mock.calls.length).toBe(3);
     });
+});
+
+afterEach(async () => {
+    const flushPromises = () => new Promise(setImmediate);
+
+    await flushPromises();
 });
