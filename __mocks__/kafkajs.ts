@@ -12,7 +12,6 @@ class Producer {
     }
 
     async send({ topic, messages }: { topic: string; messages: unknown[] }) {
-        console.log(messages);
         this.#send(topic, messages);
     }
 
@@ -65,16 +64,14 @@ class Kafka {
 
     #subscribe(topic: string, consumer: Consumer) {
         this.#topics[topic] = this.#topics[topic] || {};
-        const topicObj = this.#topics[topic];
-        topicObj[consumer.getGroupId()] = topicObj[consumer.getGroupId()] || [];
-        topicObj[consumer.getGroupId()].push(consumer);
+        const topicConsumers = this.#topics[topic];
+        topicConsumers[consumer.getGroupId()] = topicConsumers[consumer.getGroupId()] || [];
+        topicConsumers[consumer.getGroupId()].push(consumer);
     }
 
     #send(topic: string, messages: unknown[]) {
         Object.values(this.#topics[topic]).forEach((consumers) => {
             const randomConsumer = consumers[Math.floor(Math.random() * consumers.length)];
-            console.log(messages);
-
             randomConsumer.eachBatch({
                 batch: { messages }
             });
