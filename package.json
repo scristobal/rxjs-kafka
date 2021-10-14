@@ -1,6 +1,6 @@
 {
-  "name": "rxkfk",
-  "version": "0.0.1-1",
+  "name": "rxjs-kafka",
+  "version": "1.0.0",
   "description": "A no fuss rxjs wrapper for kafkajs, focused on ease of use.",
   "main": "build/index.js",
   "type": "module",
