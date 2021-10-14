@@ -1,8 +1,7 @@
 import fromKafkaTopic from './index';
-import ip from 'ip';
 import { take, interval, lastValueFrom } from 'rxjs';
-import { Kafka, logLevel } from 'kafkajs';
 
+jest.mock('kafkajs');
 jest.setTimeout(30_000);
 
 describe('Consumers', () => {
@@ -11,37 +10,14 @@ describe('Consumers', () => {
 
         const mockObserver = jest.fn();
 
-        const host = process.env.HOST_IP || ip.address();
-
         const topic = { topic: 'topic-test', fromBeginning: false };
 
         const groupId = 'example-group';
 
         const cfg = {
-            logLevel: logLevel.ERROR,
-            brokers: [`${host}:9092`],
+            brokers: ['kafka:9092'],
             clientId: 'example-producer'
         };
-
-        const kafka = new Kafka(cfg);
-
-        const admin = kafka.admin();
-
-        try {
-            await admin.connect();
-
-            const currentOffsets = await admin.fetchTopicOffsetsByTimestamp(topic.topic, Date.now());
-
-            await admin.setOffsets({
-                groupId,
-                topic: topic.topic,
-                partitions: currentOffsets
-            });
-
-            await admin.disconnect();
-        } catch (error) {
-            throw new Error('There was a problem setting offsets to latest');
-        }
 
         const { message$$, pushMessage$$ } = fromKafkaTopic(cfg, topic, { groupId });
 
