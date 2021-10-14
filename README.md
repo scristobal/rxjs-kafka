@@ -1,6 +1,10 @@
-# rxkfk
+# rxjs-kafka o rxkfk!
 
-A no fuss rxjs wrapper for kafkajs, focused on ease of use.
+A no fuss rxjs wrapper for kafkajs, focused on ease of use. 
+
+## Who?
+
+Anyone who just wants to read/write Kafka topics from the confort of reactive javascript.  
 
 ## Getting started
 
@@ -9,19 +13,19 @@ A no fuss rxjs wrapper for kafkajs, focused on ease of use.
 Install rxkfk using yarn:
 
 ```bash
-yarn add rxkfk
+yarn add rxjs-kafka
 ```
 
 Or npm:
 
 ```bash
-npm install rxkfk
+npm install rxjs-kafka
 ```
 
 Let's start by creating our RxJS subjects, using our Kafka brokers, topic and consumer details:
 
 ```typescript
-import fromKafkaTopic from 'rxkfk';
+import fromKafkaTopic from 'rxjs-kafka';
 import { of, first } from 'rxjs';
 
 const { message$$, pushMessage$$ } = fromKafkaTopic(
