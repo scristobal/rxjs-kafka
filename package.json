@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/scristobal/rxkfk.git"
+    "url": "git+https://github.com/scristobal/rxjs-kafka.git"
   },
   "keywords": [
     "kafka",
@@ -26,9 +26,9 @@
   "author": "Samuel Cristobal",
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/scristobal/rxkfk/issues"
+    "url": "https://github.com/scristobal/rxjs-kafka/issues"
   },
-  "homepage": "https://github.com/scristobal/rxkfk#readme",
+  "homepage": "https://github.com/scristobal/rxjs-kafka#readme",
   "devDependencies": {
     "@types/jest": "^27.0.2",
     "@types/node": "^16.10.2",
