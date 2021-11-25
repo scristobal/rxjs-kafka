@@ -1,10 +1,10 @@
 # rxjs-kafka o rxkfk!
 
-A no fuss rxjs wrapper for kafkajs, focused on ease of use. 
+A no fuss rxjs wrapper for kafkajs, focused on ease of use.
 
 ## Who?
 
-Anyone who just wants to read/write Kafka topics from the confort of reactive javascript.  
+Anyone who just wants to read/write Kafka topics from the comfort of reactive javascript.
 
 ## Getting started
 
