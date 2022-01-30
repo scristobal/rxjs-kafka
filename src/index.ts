@@ -7,13 +7,13 @@ import {
     ProducerConfig,
     ProducerRecord
 } from 'kafkajs';
-import { asyncScheduler, from, map, mergeAll, Observable, observeOn, Observer, share, Subject } from 'rxjs';
+import { asyncScheduler, from, map, mergeAll, Observable, observeOn, share, Subject } from 'rxjs';
 
 type JSONObject = { [key: string]: JSON };
 type JSONArray = Array<JSON>;
 type JSON = null | string | number | boolean | JSONArray | JSONObject;
 
-const rxkfk = function (
+const rxkfk = function <T>(
     kafkaOptions: KafkaConfig,
     topicOptions: ConsumerSubscribeTopic | string,
     consumerOptions?: ConsumerConfig,
@@ -70,7 +70,7 @@ const rxkfk = function (
             const msgContent = msg.value?.toString();
             if (!msgContent) return;
             try {
-                return JSON.parse(msgContent) as JSON;
+                return JSON.parse(msgContent) as T;
             } catch {
                 throw new Error('Could not parse message');
             }
@@ -79,7 +79,7 @@ const rxkfk = function (
 
     const message$$ = message$.pipe(share());
 
-    const pushMessage$$ = new Subject<JSON | undefined>();
+    const pushMessage$$ = new Subject<T | undefined>();
 
     const pushMessage = function () {
         const producer = kafka.producer(producerOptions);
@@ -90,7 +90,7 @@ const rxkfk = function (
         assertTopicString(topicExp);
 
         return {
-            next: async (message: JSON | undefined) => {
+            next: async (message: T | undefined) => {
                 const record: ProducerRecord = {
                     topic: topicExp,
                     messages: [{ value: JSON.stringify(message) }]

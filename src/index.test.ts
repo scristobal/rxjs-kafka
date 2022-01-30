@@ -19,7 +19,7 @@ describe('Consumers', () => {
             clientId: 'example-producer'
         };
 
-        const { message$$, pushMessage$$ } = fromKafkaTopic(cfg, topic, { groupId });
+        const { message$$, pushMessage$$ } = fromKafkaTopic<number>(cfg, topic, { groupId });
 
         message$$.pipe(take(3)).subscribe({
             next: (x) => {
