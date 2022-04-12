@@ -1,4 +1,4 @@
-# rxjs-kafka o rxkfk!
+# rxjs-kafka or rxkfk
 
 A no fuss rxjs wrapper for kafkajs, focused on ease of use.
 
@@ -8,7 +8,7 @@ Anyone who just wants to read/write Kafka topics from the comfort of reactive ja
 
 ## Getting started
 
-> This section follows the same example as in KakfaJS docs (https://kafka.js.org/docs/getting-started)
+> This section follows the same example as in KakfaJS docs (<https://kafka.js.org/docs/getting-started>)
 
 Install rxkfk using yarn:
 
@@ -28,7 +28,7 @@ Let's start by creating our RxJS subjects, using our Kafka brokers, topic and co
 import fromKafkaTopic from 'rxjs-kafka';
 import { of, first } from 'rxjs';
 
-const { message$$, pushMessage$$ } = fromKafkaTopic(
+const { message$, send } = fromKafkaTopic(
     {
         clientId: 'my-app',
         brokers: ['kafka1:9092', 'kafka2:9092']
@@ -38,16 +38,16 @@ const { message$$, pushMessage$$ } = fromKafkaTopic(
 );
 ```
 
-Now to produce a message to a topic, we'll subscribe `pushMessage$$` to an observable:
+Now to produce a message to a topic, we'll subscribe `send` to an observable:
 
 ```typescript
-of('Hello KafkaJS user!').subscribe(pushMessage$$);
+of('Hello KafkaJS user!').subscribe(send);
 ```
 
-Finally, to verify that our message has indeed been produced to the topic, let's subscribe an observer to the `message$$` subject:
+Finally, to verify that our message has indeed been produced to the topic, let's subscribe an observer to the `message$` subject:
 
 ```typescript
-message$$.pipe(first()).subscribe(console.log);
+message$.pipe(first()).subscribe(console.log);
 ```
 
 Congratulations, you just produced and consumed your first Kafka message using RxJS and a bit of help from rxkfk!

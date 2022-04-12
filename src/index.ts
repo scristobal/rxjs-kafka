@@ -7,7 +7,7 @@ import {
     ProducerConfig,
     ProducerRecord
 } from 'kafkajs';
-import { asyncScheduler, from, map, mergeAll, Observable, observeOn, share, Subject } from 'rxjs';
+import { filter, from, map, mergeAll, Observable, Observer } from 'rxjs';
 
 type JSONObject = { [key: string]: JSON };
 type JSONArray = Array<JSON>;
@@ -74,14 +74,11 @@ const rxkfk = function <T>(
             } catch {
                 throw new Error('Could not parse message');
             }
-        })
+        }),
+        filter((msg): msg is T => msg != undefined)
     );
 
-    const message$$ = message$.pipe(share());
-
-    const pushMessage$$ = new Subject<T | undefined>();
-
-    const pushMessage = function () {
+    const send: Observer<T> = function () {
         const producer = kafka.producer(producerOptions);
         let connected = false;
 
@@ -124,9 +121,7 @@ const rxkfk = function <T>(
         };
     }.call(undefined);
 
-    pushMessage$$.pipe(observeOn(asyncScheduler)).subscribe(pushMessage);
-
-    return { message$$, pushMessage$$ };
+    return { message$, send };
 };
 
 export default rxkfk;

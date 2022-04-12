@@ -1,5 +1,5 @@
-import fromKafkaTopic from './index';
-import { take, interval, lastValueFrom } from 'rxjs';
+import rxfkf from './index';
+import { take, interval, lastValueFrom, asyncScheduler, observeOn, Subject } from 'rxjs';
 
 jest.mock('kafkajs');
 jest.setTimeout(30_000);
@@ -19,13 +19,17 @@ describe('Consumers', () => {
             clientId: 'example-producer'
         };
 
-        const { message$$, pushMessage$$ } = fromKafkaTopic<number>(cfg, topic, { groupId });
+        const { message$, send } = rxfkf<number>(cfg, topic, { groupId });
 
-        message$$.pipe(take(3)).subscribe({
+        message$.pipe(take(3)).subscribe({
             next: (x) => {
                 mockObserver(x);
             }
         });
+
+        const pushMessage$$ = new Subject<number>();
+
+        pushMessage$$.pipe(observeOn(asyncScheduler)).subscribe(send);
 
         interval(1000).pipe(take(6)).subscribe(pushMessage$$);
 
