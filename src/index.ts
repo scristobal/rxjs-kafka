@@ -80,6 +80,7 @@ const rxkfk = function <T>(
 
     const send: Observer<T> = function () {
         const producer = kafka.producer(producerOptions);
+
         let connected = false;
 
         const topicExp = topic.topic;
