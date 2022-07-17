@@ -10,57 +10,52 @@ Anyone who just wants to read/write Kafka topics from the comfort of reactive ja
 
 > This section follows the same example as in KakfaJS docs (<https://kafka.js.org/docs/getting-started>)
 
+### Setup
+
 Install rxkfk using yarn:
 
 ```bash
-yarn add rxjs-kafka
+yarn add rxjs-kafka kafkajs rxjs
 ```
 
 Or npm:
 
 ```bash
-npm install rxjs-kafka
+npm install rxjs-kafka kafkajs rxjs
 ```
 
-Let's start by creating our RxJS subjects, using our Kafka brokers, topic and consumer details:
+### Example
 
 ```typescript
-import fromKafkaTopic from 'rxjs-kafka';
+import { withRx } from 'rxjs-kafka';
+import { Kafka } from 'kafkajs';
 import { of, first } from 'rxjs';
 
-const { message$, send } = fromKafkaTopic(
-    {
-        clientId: 'my-app',
-        brokers: ['kafka1:9092', 'kafka2:9092']
-    },
-    { topic: 'test-topic', fromBeginning: true },
-    { groupId: 'test-group' }
-);
-```
+/// ---- setup -----
 
-Now to produce a message to a topic, we'll subscribe `send` to an observable:
+const kafka = new Kafka({clientId: 'my-app',brokers: ['kafka1:9092', 'kafka2:9092']})
 
-```typescript
+const rxkafka = withRx(kafka); // !important
+
+/// ---- send -----
+
+const producer = rxkafka.producer();
+
+const send = producer.observer({ topic: 'test-topic' }));
+
 of('Hello KafkaJS user!').subscribe(send);
-```
 
-Finally, to verify that our message has indeed been produced to the topic, let's subscribe an observer to the `message$` subject:
+// ---- receive -----
 
-```typescript
+const consumer = rxkafka.consumer({ groupId: 'test-group' });
+
+const message$ = consumer.observable({ topic: 'test-topic', fromBeginning: true });
+
 message$.pipe(first()).subscribe(console.log);
 ```
 
-Congratulations, you just produced and consumed your first Kafka message using RxJS and a bit of help from rxkfk!
+## Notes
 
-## Limitations
-
--   only a single topic per subject (intended)
--   only JSON payloads (intended)
--   only pushing messages to a single topic (intended)
--   no transactions (intended, there is no equivalent mechanisms in RXJS and probably never will)
-
-## Roadmap
-
--   expose `batches` to allow consume a whole batch from Kafka.
--   return an observable containing the operation result when producing messages, eg. `RecordMetadata[]` returned by `producer.send()`
+-   in the future we might expose `batches` to allow consume/send a whole batch from Kafka.
+-   there is no way to access the operations results when producing messages with the observer, eg. `RecordMetadata[]` returned by `producer.send()`
 -   using `eachBatchAutoResolve: true` might be problematic with `take()` or similar, since the whole batch is consumed but maybe fewer elements are delivered
